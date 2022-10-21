@@ -92,11 +92,26 @@ class EditUrl:
 
     return path.realpath(abs_root_config_docs_dir) in self.page.file.abs_src_path
 
+  def __need_url_fix(self):
+    root_config_docs_dir = self.__get_root_docs_dir()
+    abs_root_config_file_dir = self.__get_root_config_file_path()
+    abs_root_config_docs_dir = path.join(abs_root_config_file_dir, root_config_docs_dir)
+    common_path = path.commonpath([path.realpath(abs_root_config_docs_dir), self.page.file.abs_src_path])
+    print(common_path)
+    if path.relpath(path.realpath(abs_root_config_docs_dir), common_path) == "docs":
+      return True
+    return False
+
+  def __gen_fixed_url(self, config):
+    return config['repo_url'] + config['edit_uri'].replace("engineering-documentation/", "") + self.__get_page_src_path()
+
   def build(self):
     if self.__is_root():
       return self.page.edit_url
     if self.__has_repo():
       config = self.__get_page_config_file_yaml()
+      if self.__need_url_fix():
+        return self.__gen_fixed_url(config)
       return config['repo_url'] + config['edit_uri'] + self.__get_page_src_path()
     return None
 
