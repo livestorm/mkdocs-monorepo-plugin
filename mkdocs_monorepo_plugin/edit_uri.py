@@ -97,7 +97,6 @@ class EditUrl:
     abs_root_config_file_dir = self.__get_root_config_file_path()
     abs_root_config_docs_dir = path.join(abs_root_config_file_dir, root_config_docs_dir)
     common_path = path.commonpath([path.realpath(abs_root_config_docs_dir), self.page.file.abs_src_path])
-    print(common_path)
     if path.relpath(path.realpath(abs_root_config_docs_dir), common_path) == "docs":
       return True
     return False
